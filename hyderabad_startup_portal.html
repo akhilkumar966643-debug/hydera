@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Hyderabad Startup Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg0:#0a0b0f;
+  --bg1:#111318;
+  --bg2:#181b22;
+  --bg3:#1f2330;
+  --border:#2a2f3e;
+  --border2:#363c50;
+  --text1:#f0f2f8;
+  --text2:#a8afc4;
+  --text3:#6b7290;
+  --accent:#5b8af0;
+  --accent2:#3d6de0;
+  --teal:#2dd4a0;
+  --amber:#f5a623;
+  --rose:#f06292;
+  --purple:#a78bfa;
+  --green:#4ade80;
+  --font-head:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --r:12px;--r2:8px;--r3:20px;
+}
+body{background:var(--bg0);color:var(--text1);font-family:var(--font-body);font-size:15px;line-height:1.6;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:var(--font-body)}
+img{display:block}
+
+/* LAYOUT */
+.shell{display:flex;min-height:100vh}
+.sidebar{width:220px;background:var(--bg1);border-right:1px solid var(--border);padding:0;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100;transition:transform .3s}
+.logo{padding:24px 20px 20px;border-bottom:1px solid var(--border)}
+.logo-mark{font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--text1);letter-spacing:-.5px;line-height:1}
+.logo-sub{font-size:11px;color:var(--text3);margin-top:3px;letter-spacing:.5px;text-transform:uppercase}
+.logo-dot{color:var(--accent)}
+.nav{padding:16px 12px;flex:1}
+.nav-section{font-size:10px;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;padding:8px 8px 4px;margin-top:8px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r2);color:var(--text2);font-size:14px;font-weight:400;transition:all .15s;margin-bottom:1px}
+.nav a:hover{background:var(--bg2);color:var(--text1)}
+.nav a.active{background:rgba(91,138,240,.12);color:var(--accent);font-weight:500}
+.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sidebar-footer{padding:16px;border-top:1px solid var(--border)}
+.badge-hyd{display:inline-flex;align-items:center;gap:6px;background:rgba(45,212,160,.1);color:var(--teal);font-size:12px;font-weight:500;padding:6px 12px;border-radius:var(--r3);border:1px solid rgba(45,212,160,.2)}
+
+.main{margin-left:220px;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:var(--bg1);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-family:var(--font-head);font-size:16px;font-weight:600}
+.search-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:8px 14px;display:flex;align-items:center;gap:8px;color:var(--text3);font-size:14px;min-width:220px;cursor:text}
+.search-box input{background:none;border:none;outline:none;color:var(--text1);font-family:var(--font-body);font-size:14px;width:100%}
+.search-box input::placeholder{color:var(--text3)}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.notif{width:34px;height:34px;border-radius:var(--r2);background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;cursor:pointer;position:relative}
+.notif-dot{width:7px;height:7px;background:var(--rose);border-radius:50%;position:absolute;top:7px;right:7px;border:1.5px solid var(--bg1)}
+
+.content{padding:28px;flex:1}
+.page{display:none;animation:fadeIn .25s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* BACK BUTTON */
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--text2);font-size:14px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);cursor:pointer;transition:all .15s;margin-bottom:20px}
+.back-btn:hover{color:var(--text1);border-color:var(--border2)}
+
+/* PAGE HEADERS */
+.page-header{margin-bottom:28px}
+.page-title{font-family:var(--font-head);font-size:26px;font-weight:700;letter-spacing:-.5px;color:var(--text1)}
+.page-subtitle{color:var(--text2);font-size:14px;margin-top:4px}
+.page-header-row{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.page-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* HERO (home) */
+.hero{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:36px;margin-bottom:28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(91,138,240,.12) 0%,transparent 60%);pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(91,138,240,.1);color:var(--accent);font-size:12px;font-weight:500;padding:5px 12px;border-radius:var(--r3);border:1px solid rgba(91,138,240,.2);margin-bottom:16px}
+.hero h1{font-family:var(--font-head);font-size:36px;font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:12px}
+.hero h1 span{color:var(--accent)}
+.hero p{color:var(--text2);font-size:15px;max-width:520px;line-height:1.7;margin-bottom:24px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{background:var(--accent);color:#fff;border:none;padding:11px 22px;border-radius:var(--r2);font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;font-family:var(--font-body)}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-secondary{background:var(--bg3);color:var(--text1);border:1px solid var(--border2);padding:11px 22px;border-radius:var(--r2);font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;font-family:var(--font-body)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px;padding-top:28px;border-top:1px solid var(--border)}
+.h-stat{text-align:left}
+.h-stat-num{font-family:var(--font-head);font-size:28px;font-weight:700;color:var(--text1)}
+.h-stat-label{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* GRIDS */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+
+/* SECTION LABELS */
+.section-label{font-family:var(--font-head);font-size:16px;font-weight:600;margin-bottom:16px;color:var(--text1)}
+.section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.see-all{font-size:13px;color:var(--accent);cursor:pointer;background:none;border:none;font-family:var(--font-body)}
+.see-all:hover{text-decoration:underline}
+
+/* CARDS */
+.card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:20px;transition:all .2s;cursor:pointer}
+.card:hover{border-color:var(--border2);transform:translateY(-2px);background:var(--bg2)}
+
+/* STARTUP CARD */
+.startup-logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0;margin-bottom:12px}
+.startup-name{font-family:var(--font-head);font-size:15px;font-weight:600;margin-bottom:4px}
+.startup-desc{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tag{display:inline-flex;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;margin-right:4px;margin-bottom:4px}
+.tag-blue{background:rgba(91,138,240,.12);color:#7ba7f5;border:1px solid rgba(91,138,240,.2)}
+.tag-teal{background:rgba(45,212,160,.1);color:var(--teal);border:1px solid rgba(45,212,160,.2)}
+.tag-amber{background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.2)}
+.tag-rose{background:rgba(240,98,146,.1);color:var(--rose);border:1px solid rgba(240,98,146,.2)}
+.tag-purple{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
+.tag-green{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2)}
+.startup-meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.startup-funding{font-size:13px;font-weight:600;color:var(--teal)}
+.startup-stage{font-size:12px;color:var(--text3)}
+
+/* STAT MINI CARDS */
+.stat-mini{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px;text-align:center}
+.stat-mini-num{font-family:var(--font-head);font-size:22px;font-weight:700;color:var(--text1)}
+.stat-mini-label{font-size:12px;color:var(--text3);margin-top:2px}
+.stat-mini-change{font-size:12px;color:var(--teal);margin-top:4px}
+
+/* ACTIVITY FEED */
+.activity-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .15s}
+.activity-item:hover{padding-left:6px}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:2px}
+.activity-body{flex:1}
+.activity-title{font-size:14px;font-weight:500;color:var(--text1);margin-bottom:2px}
+.activity-sub{font-size:13px;color:var(--text2)}
+.activity-time{font-size:12px;color:var(--text3);white-space:nowrap}
+
+/* JOB CARD */
+.job-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:18px;transition:all .2s;cursor:pointer}
+.job-card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.job-title{font-family:var(--font-head);font-size:15px;font-weight:600;margin-bottom:4px}
+.job-company{font-size:13px;color:var(--text2);margin-bottom:10px}
+.job-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.job-salary{font-size:13px;font-weight:500;color:var(--teal)}
+.job-actions{display:flex;gap:8px;margin-top:12px}
+.btn-sm{padding:7px 14px;border-radius:var(--r2);font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:var(--font-body);transition:all .15s}
+.btn-sm-primary{background:rgba(91,138,240,.15);color:var(--accent);border:1px solid rgba(91,138,240,.25)}
+.btn-sm-primary:hover{background:rgba(91,138,240,.25)}
+.btn-sm-ghost{background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.btn-sm-ghost:hover{border-color:var(--border2);color:var(--text1)}
+
+/* INVESTOR CARD */
+.investor-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:20px;transition:all .2s;cursor:pointer}
+.investor-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.investor-avatar{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;margin-bottom:12px}
+.investor-name{font-family:var(--font-head);font-size:15px;font-weight:600;margin-bottom:2px}
+.investor-firm{font-size:13px;color:var(--text2);margin-bottom:10px}
+.investor-portfolio{font-size:12px;color:var(--text3);margin-top:10px}
+.portfolio-num{font-size:18px;font-weight:600;color:var(--text1);font-family:var(--font-head)}
+
+/* EVENT CARD */
+.event-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .2s}
+.event-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.event-banner{height:80px;display:flex;align-items:center;padding:16px;font-size:13px;font-weight:600;letter-spacing:.3px}
+.event-body{padding:16px}
+.event-title{font-family:var(--font-head);font-size:14px;font-weight:600;margin-bottom:6px}
+.event-meta{font-size:12px;color:var(--text2);margin-bottom:8px}
+.event-tags{margin-bottom:10px}
+.event-count{font-size:12px;color:var(--text3)}
+
+/* DETAIL PAGES */
+.detail-hero{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:28px;margin-bottom:24px}
+.detail-logo{width:64px;height:64px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:26px;margin-bottom:16px}
+.detail-name{font-family:var(--font-head);font-size:28px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.detail-tagline{color:var(--text2);font-size:15px;margin-bottom:16px}
+.detail-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.detail-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:20px;border-top:1px solid var(--border)}
+.d-metric{text-align:left}
+.d-metric-val{font-family:var(--font-head);font-size:22px;font-weight:700}
+.d-metric-label{font-size:12px;color:var(--text3);margin-top:2px}
+
+.info-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:start}
+.info-box{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.info-box-title{font-family:var(--font-head);font-size:14px;font-weight:600;margin-bottom:16px;color:var(--text1);padding-bottom:12px;border-bottom:1px solid var(--border)}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-row-label{color:var(--text3)}
+.info-row-val{color:var(--text1);font-weight:500}
+.desc-text{font-size:14px;color:var(--text2);line-height:1.8}
+.team-member{display:flex;gap:12px;padding:10px 0;align-items:center;border-bottom:1px solid var(--border)}
+.team-member:last-child{border-bottom:none}
+.tm-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.tm-name{font-size:14px;font-weight:500}
+.tm-role{font-size:12px;color:var(--text3)}
+
+/* FILTERS */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter-btn{padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid var(--border);background:var(--bg2);color:var(--text2);transition:all .15s;font-family:var(--font-body)}
+.filter-btn:hover{border-color:var(--border2);color:var(--text1)}
+.filter-btn.active{background:rgba(91,138,240,.12);color:var(--accent);border-color:rgba(91,138,240,.3)}
+
+/* EMPTY / UTIL */
+.divider{height:1px;background:var(--border);margin:20px 0}
+.text-muted{color:var(--text3);font-size:13px}
+.flex-center{display:flex;align-items:center;gap:8px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* MOBILE MENU */
+.menu-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);padding:8px;color:var(--text1);font-size:18px;cursor:pointer}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.show{display:block}
+  .main{margin-left:0}
+  .menu-toggle{display:flex;align-items:center;justify-content:center}
+  .topbar{padding:14px 14px 14px 54px}
+  .content{padding:16px}
+  .hero h1{font-size:24px}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .detail-metrics{grid-template-columns:repeat(2,1fr)}
+  .info-grid{grid-template-columns:1fr}
+  .search-box{min-width:140px}
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="toggleMenu()">☰</button>
+<div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="shell">
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="logo">
+    <div class="logo-mark">HYD<span class="logo-dot">.</span>VC</div>
+    <div class="logo-sub">Startup Ecosystem</div>
+  </div>
+  <div class="nav">
+    <div class="nav-section">Main</div>
+    <a href="#" class="active" data-page="home" onclick="nav('home',this)"><span class="nav-icon">⌂</span>Home</a>
+    <a href="#" data-page="startups" onclick="nav('startups',this)"><span class="nav-icon">🚀</span>Startups</a>
+    <a href="#" data-page="jobs" onclick="nav('jobs',this)"><span class="nav-icon">💼</span>Jobs</a>
+    <a href="#" data-page="investors" onclick="nav('investors',this)"><span class="nav-icon">💰</span>Investors</a>
+    <a href="#" data-page="events" onclick="nav('events',this)"><span class="nav-icon">📅</span>Events</a>
+    <div class="nav-section">Live</div>
+    <a href="#" data-page="activity" onclick="nav('activity',this)"><span class="nav-icon">⚡</span>Live Activity</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="badge-hyd"><span style="font-size:14px">🌐</span>Hyderabad, TG</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="search-box"><span style="font-size:14px">🔍</span><input placeholder="Search startups, jobs..." /></div>
+      <div class="notif">🔔<div class="notif-dot"></div></div>
+      <div class="avatar">RA</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+<!-- ████ HOME ████ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-tag"><span class="live-dot"></span> Live ecosystem data</div>
+    <h1>Hyderabad's Premier<br/><span>Startup Hub</span></h1>
+    <p>Connect with founders, discover investment opportunities, explore jobs, and stay ahead in Telangana's thriving innovation ecosystem.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="nav('startups')">Explore Startups</button>
+      <button class="btn-secondary" onclick="nav('investors')">Find Investors</button>
+    </div>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-num">2,800+</div><div class="h-stat-label">Registered startups</div></div>
+      <div class="h-stat"><div class="h-stat-num">₹12,400 Cr</div><div class="h-stat-label">Total funding raised</div></div>
+      <div class="h-stat"><div class="h-stat-num">340+</div><div class="h-stat-label">Active investors</div></div>
+      <div class="h-stat"><div class="h-stat-num">68,000+</div><div class="h-stat-label">Startup jobs</div></div>
+    </div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:28px">
+    <div class="stat-mini"><div class="stat-mini-num">47</div><div class="stat-mini-label">New startups this month</div><div class="stat-mini-change">↑ 18% vs last month</div></div>
+    <div class="stat-mini"><div class="stat-mini-num">₹840 Cr</div><div class="stat-mini-label">Funding this month</div><div class="stat-mini-change">↑ 31% vs last month</div></div>
+    <div class="stat-mini"><div class="stat-mini-num">1,240</div><div class="stat-mini-label">Open positions</div><div class="stat-mini-change">↑ 9% vs last month</div></div>
+    <div class="stat-mini"><div class="stat-mini-num">12</div><div class="stat-mini-label">Events this week</div><div class="stat-mini-change">Upcoming events</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:28px">
+    <div>
+      <div class="section-row"><div class="section-label">Trending Startups</div><button class="see-all" onclick="nav('startups')">See all →</button></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        ${renderMiniStartupCards(3)}
+      </div>
+    </div>
+    <div>
+      <div class="section-row"><div class="section-label"><span class="flex-center"><span class="live-dot"></span>Live Activity</span></div><button class="see-all" onclick="nav('activity')">See all →</button></div>
+      <div style="background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:4px 16px">
+        ${renderActivityFeed(5)}
+      </div>
+    </div>
+  </div>
+
+  <div class="section-row"><div class="section-label">Hot Jobs</div><button class="see-all" onclick="nav('jobs')">See all →</button></div>
+  <div class="grid-3" style="margin-bottom:28px">
+    ${renderMiniJobCards(3)}
+  </div>
+</div>
+
+<!-- ████ STARTUPS ████ -->
+<div id="page-startups" class="page">
+  <div class="page-header-row">
+    <div class="page-header">
+      <div class="page-title">Startups</div>
+      <div class="page-subtitle">2,800+ startups across Hyderabad & Telangana</div>
+    </div>
+    <div class="page-actions">
+      <button class="btn-secondary" style="font-size:13px;padding:9px 16px">+ List Startup</button>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter(this)">All</button>
+    <button class="filter-btn" onclick="setFilter(this)">SaaS</button>
+    <button class="filter-btn" onclick="setFilter(this)">Fintech</button>
+    <button class="filter-btn" onclick="setFilter(this)">HealthTech</button>
+    <button class="filter-btn" onclick="setFilter(this)">EdTech</button>
+    <button class="filter-btn" onclick="setFilter(this)">AgriTech</button>
+    <button class="filter-btn" onclick="setFilter(this)">DeepTech</button>
+    <button class="filter-btn" onclick="setFilter(this)">Seed</button>
+    <button class="filter-btn" onclick="setFilter(this)">Series A</button>
+    <button class="filter-btn" onclick="setFilter(this)">Series B+</button>
+  </div>
+  <div class="grid-3" id="startups-grid">
+    ${renderStartupCards()}
+  </div>
+</div>
+
+<!-- ████ STARTUP DETAIL ████ -->
+<div id="page-startup-detail" class="page">
+  <button class="back-btn" onclick="nav('startups')">← Back to Startups</button>
+  <div id="startup-detail-content"></div>
+</div>
+
+<!-- ████ JOBS ████ -->
+<div id="page-jobs" class="page">
+  <div class="page-header-row">
+    <div class="page-header">
+      <div class="page-title">Jobs</div>
+      <div class="page-subtitle">1,240 open roles at Hyderabad startups</div>
+    </div>
+    <div class="page-actions">
+      <button class="btn-secondary" style="font-size:13px;padding:9px 16px">Post a Job</button>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter(this)">All roles</button>
+    <button class="filter-btn" onclick="setFilter(this)">Engineering</button>
+    <button class="filter-btn" onclick="setFilter(this)">Product</button>
+    <button class="filter-btn" onclick="setFilter(this)">Design</button>
+    <button class="filter-btn" onclick="setFilter(this)">Sales</button>
+    <button class="filter-btn" onclick="setFilter(this)">Marketing</button>
+    <button class="filter-btn" onclick="setFilter(this)">Remote</button>
+    <button class="filter-btn" onclick="setFilter(this)">Onsite</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px" id="jobs-list">
+    ${renderJobCards()}
+  </div>
+</div>
+
+<!-- ████ JOB DETAIL ████ -->
+<div id="page-job-detail" class="page">
+  <button class="back-btn" onclick="nav('jobs')">← Back to Jobs</button>
+  <div id="job-detail-content"></div>
+</div>
+
+<!-- ████ INVESTORS ████ -->
+<div id="page-investors" class="page">
+  <div class="page-header-row">
+    <div class="page-header">
+      <div class="page-title">Investors</div>
+      <div class="page-subtitle">340+ active investors backing Hyderabad startups</div>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter(this)">All</button>
+    <button class="filter-btn" onclick="setFilter(this)">Angel</button>
+    <button class="filter-btn" onclick="setFilter(this)">VC</button>
+    <button class="filter-btn" onclick="setFilter(this)">Family Office</button>
+    <button class="filter-btn" onclick="setFilter(this)">Corporate VC</button>
+    <button class="filter-btn" onclick="setFilter(this)">Government</button>
+  </div>
+  <div class="grid-3">
+    ${renderInvestorCards()}
+  </div>
+</div>
+
+<!-- ████ INVESTOR DETAIL ████ -->
+<div id="page-investor-detail" class="page">
+  <button class="back-btn" onclick="nav('investors')">← Back to Investors</button>
+  <div id="investor-detail-content"></div>
+</div>
+
+<!-- ████ EVENTS ████ -->
+<div id="page-events" class="page">
+  <div class="page-header-row">
+    <div class="page-header">
+      <div class="page-title">Events</div>
+      <div class="page-subtitle">Upcoming startup events, meetups & conferences</div>
+    </div>
+    <div class="page-actions">
+      <button class="btn-secondary" style="font-size:13px;padding:9px 16px">+ Submit Event</button>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter(this)">All</button>
+    <button class="filter-btn" onclick="setFilter(this)">This week</button>
+    <button class="filter-btn" onclick="setFilter(this)">This month</button>
+    <button class="filter-btn" onclick="setFilter(this)">Conferences</button>
+    <button class="filter-btn" onclick="setFilter(this)">Workshops</button>
+    <button class="filter-btn" onclick="setFilter(this)">Networking</button>
+    <button class="filter-btn" onclick="setFilter(this)">Hackathons</button>
+  </div>
+  <div class="grid-3">
+    ${renderEventCards()}
+  </div>
+</div>
+
+<!-- ████ EVENT DETAIL ████ -->
+<div id="page-event-detail" class="page">
+  <button class="back-btn" onclick="nav('events')">← Back to Events</button>
+  <div id="event-detail-content"></div>
+</div>
+
+<!-- ████ LIVE ACTIVITY ████ -->
+<div id="page-activity" class="page">
+  <div class="page-header">
+    <div class="page-title flex-center"><span class="live-dot"></span> Live Activity</div>
+    <div class="page-subtitle">Real-time updates from the Hyderabad startup ecosystem</div>
+  </div>
+  <div class="grid-4" style="margin-bottom:24px">
+    <div class="stat-mini"><div class="stat-mini-num">23</div><div class="stat-mini-label">Updates today</div></div>
+    <div class="stat-mini"><div class="stat-mini-num">₹142 Cr</div><div class="stat-mini-label">Funding today</div></div>
+    <div class="stat-mini"><div class="stat-mini-num">5</div><div class="stat-mini-label">New startups</div></div>
+    <div class="stat-mini"><div class="stat-mini-num">8</div><div class="stat-mini-label">Hirings posted</div></div>
+  </div>
+  <div class="info-box">
+    <div class="info-box-title flex-center"><span class="live-dot"></span> All activity — updating live</div>
+    ${renderActivityFeed(15)}
+  </div>
+</div>
+
+<!-- ████ ACTIVITY DETAIL ████ -->
+<div id="page-activity-detail" class="page">
+  <button class="back-btn" onclick="nav('activity')">← Back to Activity</button>
+  <div id="activity-detail-content"></div>
+</div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+const STARTUPS = [
+  {id:0,name:'Darwinbox',logo:'D',logoColor:'#1a3a8f',logoBg:'rgba(91,138,240,.15)',sector:'HRTech',stage:'Series D',funding:'₹1,200 Cr',desc:'Cloud-based HR software platform serving 850+ enterprises across Asia.',founded:'2015',team:'650+',website:'darwinbox.com',hq:'HITEC City',about:'Darwinbox is Asia\'s fastest-growing HCM platform helping enterprises streamline HR operations with AI-powered tools for recruitment, payroll, performance, and engagement.',members:[{name:'Rohit Chennamaneni',role:'Co-founder & CEO',init:'RC'},{name:'Chaitanya Peddi',role:'Co-founder',init:'CP'},{name:'Jayant Paleti',role:'Co-founder',init:'JP'}],tags:['HRTech','SaaS','Enterprise'],investors:'Peak XV, Salesforce Ventures',revenue:'₹380 Cr ARR'},
+  {id:1,name:'Zenoti',logo:'Z',logoColor:'#0a4a3a',logoBg:'rgba(45,212,160,.12)',sector:'SaaS',stage:'Series D',funding:'₹2,100 Cr',desc:'Cloud software for salons, spas and wellness businesses globally.',founded:'2010',team:'1,000+',website:'zenoti.com',hq:'Jubilee Hills',about:'Zenoti provides an all-in-one cloud platform for salons, spas, medspas, and fitness studios. With 12,000+ businesses across 50 countries, it\'s the world\'s leading beauty & wellness SaaS.',members:[{name:'Sudheer Koneru',role:'CEO & Co-founder',init:'SK'},{name:'Greg Ayers',role:'COO',init:'GA'}],tags:['SaaS','Wellness','B2B'],investors:'Tiger Global, Norwest',revenue:'₹620 Cr ARR'},
+  {id:2,name:'Groww',logo:'G',logoColor:'#1a4a1a',logoBg:'rgba(74,222,128,.1)',sector:'Fintech',stage:'Series F',funding:'₹4,500 Cr',desc:'Investment platform for stocks, mutual funds, and digital gold.',founded:'2016',team:'1,500+',website:'groww.in',hq:'Nanakramguda',about:'Groww is India\'s leading fintech platform offering seamless investment in stocks, mutual funds, US stocks, fixed deposits, and more. Serving 60M+ registered users.',members:[{name:'Lalit Keshre',role:'CEO & Co-founder',init:'LK'}],tags:['Fintech','Investing','Consumer'],investors:'Y Combinator, Sequoia, Tiger',revenue:'₹1,200 Cr'},
+  {id:3,name:'MediBuddy',logo:'M',logoColor:'#4a1a1a',logoBg:'rgba(240,98,146,.1)',sector:'HealthTech',stage:'Series C',funding:'₹900 Cr',desc:'Digital healthcare platform connecting patients to doctors and hospitals.',founded:'2013',team:'400+',website:'medibuddy.in',hq:'Banjara Hills',about:'MediBuddy is one of India\'s largest digital healthcare platforms offering teleconsultations, medicine delivery, diagnostic services, and corporate health benefits.',members:[{name:'Satish Kannan',role:'CEO',init:'SK'}],tags:['HealthTech','B2B2C','Telemedicine'],investors:'Goldman Sachs, Evolvence',revenue:'₹280 Cr'},
+  {id:4,name:'Tracxn',logo:'T',logoColor:'#2a1a4a',logoBg:'rgba(167,139,250,.1)',sector:'SaaS',stage:'Listed',funding:'₹700 Cr',desc:'SaaS platform for tracking startups and private markets globally.',founded:'2013',team:'300+',website:'tracxn.com',hq:'Madhapur',about:'Tracxn is a global data platform for tracking startups, VCs, and private companies. Used by investors, corporates, and governments for deal sourcing and competitive intelligence.',members:[{name:'Neha Singh',role:'Co-founder',init:'NS'},{name:'Abhishek Goyal',role:'Co-founder',init:'AG'}],tags:['SaaS','Data','VC Tools'],investors:'Public (NSE/BSE)',revenue:'₹110 Cr'},
+  {id:5,name:'Ninjacart',logo:'N',logoColor:'#3a2a0a',logoBg:'rgba(245,166,35,.1)',sector:'AgriTech',stage:'Series C',funding:'₹1,800 Cr',desc:'B2B supply chain platform connecting farmers to retailers directly.',founded:'2015',team:'1,200+',website:'ninjacart.in',hq:'Gachibowli',about:'Ninjacart is India\'s largest agri-commerce platform that directly connects farmers with businesses, disrupting the traditional supply chain with tech-driven logistics.',members:[{name:'Thirukumaran',role:'CEO',init:'TN'}],tags:['AgriTech','Supply Chain','B2B'],investors:'Walmart, Tiger Global',revenue:'₹2,800 Cr GMV'},
+];
+
+const JOBS = [
+  {id:0,title:'Senior Backend Engineer',company:'Darwinbox',logo:'D',logoBg:'rgba(91,138,240,.15)',type:'Full-time',location:'HITEC City, Hyderabad',remote:false,salary:'₹30–45 LPA',skills:['Node.js','Kubernetes','PostgreSQL'],desc:'Build scalable HR platform APIs serving 850+ enterprise clients across Asia.',about:'We are looking for an experienced backend engineer to join our platform team. You will work on our core HR platform serving millions of employees across Asia.',responsibilities:['Design and build RESTful APIs for HR workflows','Optimize database queries and improve system performance','Collaborate with frontend and product teams'],requirements:['5+ years backend development experience','Strong knowledge of Node.js and microservices','Experience with cloud platforms (AWS/GCP)'],posted:'2 days ago',applicants:128},
+  {id:1,title:'Product Manager – Fintech',company:'Groww',logo:'G',logoBg:'rgba(74,222,128,.1)',type:'Full-time',location:'Nanakramguda, Hyderabad',remote:false,salary:'₹35–55 LPA',skills:['Product Strategy','Fintech','SQL'],desc:'Lead product for investment journeys across stocks, MFs & digital gold.',about:'Join Groww\'s product team to define and execute the roadmap for our investment products used by 60M+ users.',responsibilities:['Define product vision and roadmap','Work closely with engineering and design','Analyse user behaviour and growth metrics'],requirements:['4+ years PM experience','Understanding of financial products','Data-driven decision making'],posted:'1 day ago',applicants:94},
+  {id:2,title:'ML Engineer – NLP',company:'Zenoti',logo:'Z',logoBg:'rgba(45,212,160,.12)',type:'Full-time',location:'Jubilee Hills, Hyderabad',remote:true,salary:'₹25–40 LPA',skills:['Python','PyTorch','LLMs'],desc:'Build AI-powered scheduling and recommendation engines for wellness SMBs.',about:'Zenoti\'s AI team is building the next generation of intelligent automation for beauty & wellness businesses.',responsibilities:['Train and deploy NLP models at scale','Build recommendation systems','Monitor model performance in production'],requirements:['3+ years ML engineering experience','Strong Python and deep learning skills','Experience with LLMs or NLP preferred'],posted:'3 days ago',applicants:67},
+  {id:3,title:'Design Lead – Mobile',company:'MediBuddy',logo:'M',logoBg:'rgba(240,98,146,.1)',type:'Full-time',location:'Banjara Hills, Hyderabad',remote:false,salary:'₹20–32 LPA',skills:['Figma','iOS/Android','Design Systems'],desc:'Lead design for teleconsultation and diagnostic booking experiences.',about:'Shape the future of digital healthcare UX for millions of patients and doctors.',responsibilities:['Own end-to-end design for mobile app','Build and maintain design system','Conduct user research and usability testing'],requirements:['6+ years UX/product design','Strong portfolio of mobile apps','Experience in healthcare domain a plus'],posted:'5 days ago',applicants:41},
+  {id:4,title:'Growth Marketing Manager',company:'Ninjacart',logo:'N',logoBg:'rgba(245,166,35,.1)',type:'Full-time',location:'Gachibowli, Hyderabad',remote:false,salary:'₹18–28 LPA',skills:['Performance Marketing','Analytics','GTM'],desc:'Drive farmer and retailer acquisition across Telangana and AP markets.',about:'Join Ninjacart\'s growth team and build marketing strategies that impact India\'s agricultural supply chain.',responsibilities:['Lead digital and offline marketing campaigns','Manage performance marketing budgets','Track and optimize acquisition funnel'],requirements:['4+ years growth/marketing experience','Data-driven with strong analytical skills','Regional market experience preferred'],posted:'1 week ago',applicants:88},
+  {id:5,title:'DevOps / SRE',company:'Tracxn',logo:'T',logoBg:'rgba(167,139,250,.1)',type:'Full-time',location:'Madhapur, Hyderabad',remote:true,salary:'₹22–35 LPA',skills:['Kubernetes','Terraform','AWS'],desc:'Ensure 99.9% uptime for our global startup intelligence platform.',about:'Help Tracxn scale its infrastructure to serve thousands of investors and enterprises worldwide.',responsibilities:['Manage Kubernetes clusters and CI/CD pipelines','Implement IaC with Terraform','On-call and incident response'],requirements:['3+ years DevOps/SRE experience','Strong Kubernetes and cloud experience','Experience with monitoring tools'],posted:'4 days ago',applicants:53},
+];
+
+const INVESTORS = [
+  {id:0,name:'Rajan Anandan',firm:'Peak XV Partners',type:'VC',init:'RA',avatarBg:'rgba(91,138,240,.15)',avatarColor:'#7ba7f5',focus:'Consumer, SaaS, Fintech',portfolio:28,deployed:'₹1,200 Cr',stage:'Seed to Series B',deals:['Darwinbox','Zepto','Razorpay'],about:'Rajan Anandan is Managing Director at Peak XV Partners (formerly Sequoia Capital India). He is one of India\'s most active tech investors and was formerly VP at Google India.'},
+  {id:1,name:'Vani Kola',firm:'Kalaari Capital',type:'VC',init:'VK',avatarBg:'rgba(240,98,146,.1)',avatarColor:'#f06292',focus:'Deep Tech, Consumer, HealthTech',portfolio:42,deployed:'₹2,100 Cr',stage:'Seed to Series C',deals:['Myntra','Dream11','Cure.fit'],about:'Vani Kola is the Founder and Managing Director of Kalaari Capital. She is a Silicon Valley veteran and one of India\'s most respected venture capitalists, with a focus on building iconic consumer brands.'},
+  {id:2,name:'Sujit Janardanan',firm:'T-Hub',type:'Government',init:'SJ',avatarBg:'rgba(45,212,160,.1)',avatarColor:'#2dd4a0',focus:'All sectors, Early Stage',portfolio:150,deployed:'₹800 Cr',stage:'Pre-seed to Seed',deals:['ePlane.ai','Skyroot','Euler Motors'],about:'T-Hub is India\'s largest startup incubator, run by the Government of Telangana. It provides mentorship, infrastructure, and funding support to early-stage startups.'},
+  {id:3,name:'Vikram Gupta',firm:'IvyCap Ventures',type:'VC',init:'VG',avatarBg:'rgba(245,166,35,.1)',avatarColor:'#f5a623',focus:'B2B SaaS, EdTech, Fintech',portfolio:35,deployed:'₹900 Cr',stage:'Series A to Series C',deals:['Ninjacart','Vidyut','Plum'],about:'Vikram Gupta is the Founder and Managing Partner of IvyCap Ventures, a VC fund that focuses on backing exceptional entrepreneurs with disruptive ideas in the Indian market.'},
+  {id:4,name:'Arpit Agarwal',firm:'Blume Ventures',type:'VC',init:'AA',avatarBg:'rgba(167,139,250,.1)',avatarColor:'#a78bfa',focus:'SaaS, Fintech, Consumer',portfolio:55,deployed:'₹1,500 Cr',stage:'Pre-seed to Series A',deals:['Unacademy','Zuddl','Exotel'],about:'Arpit Agarwal is a Partner at Blume Ventures, one of India\'s most active early-stage VCs. He focuses on identifying and nurturing exceptional founders at the earliest stages.'},
+  {id:5,name:'Harsha Kumar',firm:'Lightspeed India',type:'VC',init:'HK',avatarBg:'rgba(74,222,128,.1)',avatarColor:'#4ade80',focus:'Consumer, Fintech, Gaming',portfolio:38,deployed:'₹2,800 Cr',stage:'Series A to Series C',deals:['Byju\'s','Oyo Rooms','ShareChat'],about:'Harsha Kumar is a Partner at Lightspeed India. With over 15 years in venture capital, she focuses on backing consumer and fintech companies with potential to become category leaders.'},
+];
+
+const EVENTS = [
+  {id:0,title:'Hyderabad Startup Summit 2026',type:'Conference',date:'Apr 18–19, 2026',venue:'HICC, Madhapur',attendees:1200,color:'#1a2a5a',accent:'#5b8af0',desc:'Annual flagship event bringing together 1200+ founders, investors, and ecosystem enablers.',about:'The Hyderabad Startup Summit is Telangana\'s largest annual gathering of the startup ecosystem. Two days of keynotes, panels, workshops, and networking with India\'s leading founders, investors, and innovators.',speakers:['Vani Kola – Kalaari Capital','Rajan Anandan – Peak XV','Sudheer Koneru – Zenoti','T. Harish Rao – Minister, IT'],tags:['Conference','Networking','Pitching'],tickets:'₹2,500 onwards',registrations:847},
+  {id:1,title:'SaaS Founders Meetup',type:'Networking',date:'Apr 15, 2026',venue:'T-Hub, Raidurgam',attendees:80,color:'#0a3a2a',accent:'#2dd4a0',desc:'Monthly gathering of SaaS founders to share learnings and build connections.',about:'An intimate monthly meetup for SaaS founders in Hyderabad. This is a no-pitch, peer-learning format where founders share what\'s working and what\'s not.',speakers:['Open format – peer discussions'],tags:['SaaS','Founders','Monthly'],tickets:'Free',registrations:62},
+  {id:2,title:'HealthTech Innovation Challenge',type:'Hackathon',date:'Apr 22–23, 2026',venue:'AIC-CCMB, Uppal',attendees:300,color:'#3a0a1a',accent:'#f06292',desc:'48-hour hackathon solving healthcare access problems with tech.',about:'Build innovative solutions to India\'s most pressing healthcare challenges. ₹25L in prizes, mentorship from leading HealthTech founders, and fast-tracked investment interest from sponsors.',speakers:['Dr. Reddy\'s Labs','MediBuddy','Apollo Hospitals'],tags:['Hackathon','HealthTech','Prizes'],tickets:'Free to apply',registrations:218},
+  {id:3,title:'Deep Tech Demo Day',type:'Demo Day',date:'May 3, 2026',venue:'IIIT Hyderabad',attendees:200,color:'#2a1a4a',accent:'#a78bfa',desc:'12 deep tech startups pitch to a room of investors and corporates.',about:'Selected deep tech startups from Hyderabad\'s R&D ecosystem demo their products to a curated audience of VCs, angel investors, and corporate innovation heads.',speakers:['Jury of 15 investors and domain experts'],tags:['DeepTech','Pitching','Investment'],tickets:'₹500 (investor pass)',registrations:163},
+  {id:4,title:'Women in Tech Hyderabad',type:'Workshop',date:'Apr 24, 2026',venue:'Microsoft Hyderabad',attendees:150,color:'#1a0a2a',accent:'#c084fc',desc:'Panel discussions and workshops for women founders and tech professionals.',about:'A full day of inspiration, learning, and community for women in tech and entrepreneurship across Hyderabad. Panels, workshops, mentoring sessions, and networking dinners.',speakers:['Harsha Kumar – Lightspeed','Neha Singh – Tracxn','Debjani Ghosh – NASSCOM'],tags:['Diversity','Founders','Workshop'],tickets:'Free (apply)',registrations:134},
+  {id:5,title:'Agri-Tech Connect 2026',type:'Conference',date:'May 10, 2026',venue:'ICRISAT, Patancheru',attendees:400,color:'#1a2a0a',accent:'#4ade80',desc:'Connecting agri startups with farmers, FPOs, and agri investors.',about:'A focused event on agricultural technology bringing together startups, farmer producer organizations, agri VCs, and government officials to catalyze investment in Indian agriculture.',speakers:['Ninjacart','Agri VCs','ICAR Officials'],tags:['AgriTech','B2B','Government'],tickets:'₹1,000',registrations:289},
+];
+
+const ACTIVITIES = [
+  {id:0,icon:'💰',color:'rgba(91,138,240,.15)',title:'Darwinbox closes ₹240 Cr Series D extension',sub:'New investment led by Salesforce Ventures • HRTech',time:'12 min ago',type:'funding'},
+  {id:1,icon:'🚀',color:'rgba(45,212,160,.1)',title:'ePlane.ai launches first electric air taxi prototype',sub:'Unveiled at Rajiv Gandhi International Airport • DeepTech',time:'1 hr ago',type:'launch'},
+  {id:2,icon:'💼',color:'rgba(74,222,128,.1)',title:'Groww opens 200 new engineering roles in Hyderabad',sub:'Hiring for backend, ML, and data roles • Fintech',time:'2 hrs ago',type:'hiring'},
+  {id:3,icon:'🏆',color:'rgba(245,166,35,.1)',title:'Ninjacart wins NASSCOM Emerge 50 Award 2026',sub:'Recognised for supply chain innovation • AgriTech',time:'3 hrs ago',type:'award'},
+  {id:4,icon:'🤝',color:'rgba(240,98,146,.1)',title:'MediBuddy partners with GHMC for community health',sub:'1M residents to get digital health IDs • HealthTech',time:'5 hrs ago',type:'partnership'},
+  {id:5,icon:'📊',color:'rgba(167,139,250,.1)',title:'T-Hub cohort 12 announced — 42 startups selected',sub:'Applications from 18 states reviewed • Incubation',time:'6 hrs ago',type:'news'},
+  {id:6,icon:'💰',color:'rgba(91,138,240,.15)',title:'Skyroot Aerospace raises ₹640 Cr Series C',sub:'Peak XV leads round for space-tech pioneer • DeepTech',time:'8 hrs ago',type:'funding'},
+  {id:7,icon:'🚀',color:'rgba(45,212,160,.1)',title:'Euler Motors delivers 500 electric vehicles to Swiggy',sub:'Partnership covers Hyderabad and Bengaluru zones • EV',time:'10 hrs ago',type:'launch'},
+  {id:8,icon:'🏢',color:'rgba(245,166,35,.1)',title:'WE Hub accelerates 30 women-led startups',sub:'Cohort 8 kickoff at Raidurgam campus • Incubation',time:'Yesterday',type:'news'},
+  {id:9,icon:'💼',color:'rgba(74,222,128,.1)',title:'Zenoti crosses ₹600 Cr ARR milestone',sub:'50% YoY growth driven by US market expansion • SaaS',time:'Yesterday',type:'milestone'},
+  {id:10,icon:'🤝',color:'rgba(240,98,146,.1)',title:'MediBuddy acquires HealthPlix for ₹180 Cr',sub:'Strengthening doctor-facing product portfolio • HealthTech',time:'2 days ago',type:'acquisition'},
+  {id:11,icon:'📊',color:'rgba(167,139,250,.1)',title:'Tracxn reports 40% revenue growth in FY26',sub:'Global expansion fuels strong quarterly results • SaaS',time:'2 days ago',type:'milestone'},
+  {id:12,icon:'💰',color:'rgba(91,138,240,.15)',title:'PaySense gets ₹120 Cr debt funding from SBI',sub:'Expanding consumer lending portfolio • Fintech',time:'3 days ago',type:'funding'},
+  {id:13,icon:'🏆',color:'rgba(245,166,35,.1)',title:'Hyderabad ranks #2 in National Startup Rankings 2026',sub:'DPIIT releases annual ranking of state ecosystems • Policy',time:'3 days ago',type:'award'},
+  {id:14,icon:'🚀',color:'rgba(45,212,160,.1)',title:'Stigg.io launches enterprise pricing engine for SaaS',sub:'Built by ex-Salesforce founders in Hyderabad • B2B SaaS',time:'4 days ago',type:'launch'},
+];
+
+// ── RENDER HELPERS ─────────────────────────────────────────────────────
+function renderMiniStartupCards(n){
+  return STARTUPS.slice(0,n).map(s=>`
+  <div class="card" style="display:flex;gap:14px;align-items:flex-start;padding:14px" onclick="showStartupDetail(${s.id})">
+    <div class="startup-logo" style="background:${s.logoBg};color:${s.logoColor};width:40px;height:40px;border-radius:8px;margin-bottom:0">${s.logo}</div>
+    <div style="flex:1;min-width:0">
+      <div class="startup-name" style="font-size:14px">${s.name}</div>
+      <div class="startup-desc" style="font-size:13px;margin-bottom:8px;-webkit-line-clamp:1">${s.desc}</div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span class="tag tag-blue">${s.sector}</span>
+        <span style="font-size:12px;color:var(--teal);font-weight:500">${s.funding}</span>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function renderStartupCards(){
+  return STARTUPS.map(s=>`
+  <div class="card" onclick="showStartupDetail(${s.id})">
+    <div class="startup-logo" style="background:${s.logoBg};color:${s.logoColor}">${s.logo}</div>
+    <div class="startup-name">${s.name}</div>
+    <div class="startup-desc">${s.desc}</div>
+    <div>${s.tags.map(t=>`<span class="tag tag-blue">${t}</span>`).join('')}</div>
+    <div class="startup-meta">
+      <span class="startup-funding">${s.funding}</span>
+      <span class="startup-stage">${s.stage}</span>
+    </div>
+  </div>`).join('');
+}
+
+function renderMiniJobCards(n){
+  return JOBS.slice(0,n).map(j=>`
+  <div class="job-card" onclick="showJobDetail(${j.id})">
+    <div class="job-title">${j.title}</div>
+    <div class="job-company">${j.company}</div>
+    <div class="job-meta">
+      <span class="tag tag-blue">${j.location.split(',')[0]}</span>
+      ${j.remote?'<span class="tag tag-teal">Remote OK</span>':''}
+      <span class="tag tag-amber">${j.type}</span>
+    </div>
+    <div class="job-salary">${j.salary}</div>
+  </div>`).join('');
+}
+
+function renderJobCards(){
+  return JOBS.map(j=>`
+  <div class="job-card" onclick="showJobDetail(${j.id})">
+    <div style="display:flex;gap:14px;align-items:flex-start">
+      <div style="width:44px;height:44px;border-radius:10px;background:${j.logoBg};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0;color:var(--text1)">${j.logo}</div>
+      <div style="flex:1">
+        <div class="job-title">${j.title}</div>
+        <div class="job-company" style="margin-bottom:6px">${j.company}</div>
+        <div class="job-meta">
+          <span class="tag tag-blue">📍 ${j.location}</span>
+          ${j.remote?'<span class="tag tag-teal">Remote OK</span>':''}
+          <span class="tag tag-amber">${j.type}</span>
+        </div>
+        <div style="font-size:13px;color:var(--text2);margin-top:6px">${j.desc}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">${j.skills.map(s=>`<span class="tag tag-purple">${s}</span>`).join('')}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="job-salary">${j.salary}</div>
+        <div class="text-muted" style="margin-top:4px">${j.posted}</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">${j.applicants} applied</div>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function renderInvestorCards(){
+  return INVESTORS.map(inv=>`
+  <div class="investor-card" onclick="showInvestorDetail(${inv.id})">
+    <div class="investor-avatar" style="background:${inv.avatarBg};color:${inv.avatarColor}">${inv.init}</div>
+    <div class="investor-name">${inv.name}</div>
+    <div class="investor-firm">${inv.firm}</div>
+    <span class="tag ${inv.type==='VC'?'tag-blue':inv.type==='Government'?'tag-teal':'tag-amber'}">${inv.type}</span>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+      <div style="font-size:12px;color:var(--text3)">Focus areas</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:2px">${inv.focus}</div>
+    </div>
+    <div class="investor-portfolio" style="display:flex;gap:16px;margin-top:12px">
+      <div><div class="portfolio-num">${inv.portfolio}</div><div style="font-size:11px;color:var(--text3)">Investments</div></div>
+      <div><div class="portfolio-num" style="font-size:15px">${inv.deployed}</div><div style="font-size:11px;color:var(--text3)">Deployed</div></div>
+    </div>
+  </div>`).join('');
+}
+
+function renderEventCards(){
+  return EVENTS.map(ev=>`
+  <div class="event-card" onclick="showEventDetail(${ev.id})">
+    <div class="event-banner" style="background:${ev.color};color:${ev.accent}">
+      <div>
+        <div style="font-size:11px;opacity:.7;margin-bottom:2px">${ev.type.toUpperCase()}</div>
+        <div style="font-size:13px">${ev.date}</div>
+      </div>
+    </div>
+    <div class="event-body">
+      <div class="event-title">${ev.title}</div>
+      <div class="event-meta">📍 ${ev.venue}</div>
+      <div class="event-tags">${ev.tags.map(t=>`<span class="tag tag-blue">${t}</span>`).join('')}</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:8px">${ev.desc}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="event-count">👥 ${ev.attendees} capacity</div>
+        <div style="font-size:12px;color:var(--teal);font-weight:500">${ev.tickets}</div>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function renderActivityFeed(n){
+  return ACTIVITIES.slice(0,n).map(a=>`
+  <div class="activity-item" onclick="showActivityDetail(${a.id})">
+    <div class="activity-dot" style="background:${a.color}">${a.icon}</div>
+    <div class="activity-body">
+      <div class="activity-title">${a.title}</div>
+      <div class="activity-sub">${a.sub}</div>
+    </div>
+    <div class="activity-time">${a.time}</div>
+  </div>`).join('');
+}
+
+// ── DETAIL RENDERERS ───────────────────────────────────────────────────
+function renderStartupDetail(s){
+  document.getElementById('startup-detail-content').innerHTML=`
+  <div class="detail-hero">
+    <div class="detail-logo" style="background:${s.logoBg};color:${s.logoColor}">${s.logo}</div>
+    <div class="detail-name">${s.name}</div>
+    <div class="detail-tagline">${s.desc}</div>
+    <div class="detail-tags">${s.tags.map(t=>`<span class="tag tag-blue">${t}</span>`).join('')}<span class="tag tag-teal">${s.stage}</span></div>
+    <div class="hero-btns">
+      <button class="btn-primary">Connect with Founders</button>
+      <button class="btn-secondary">View Funding History</button>
+    </div>
+    <div class="detail-metrics">
+      <div class="d-metric"><div class="d-metric-val" style="color:var(--teal)">${s.funding}</div><div class="d-metric-label">Total raised</div></div>
+      <div class="d-metric"><div class="d-metric-val">${s.team}</div><div class="d-metric-label">Team size</div></div>
+      <div class="d-metric"><div class="d-metric-val">${s.founded}</div><div class="d-metric-label">Founded</div></div>
+      <div class="d-metric"><div class="d-metric-val" style="color:var(--amber)">${s.revenue}</div><div class="d-metric-label">Revenue / ARR</div></div>
+    </div>
+  </div>
+  <div class="info-grid">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="info-box">
+        <div class="info-box-title">About ${s.name}</div>
+        <div class="desc-text">${s.about}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-title">Founding Team</div>
+        ${s.members.map(m=>`<div class="team-member"><div class="tm-avatar" style="background:${s.logoBg};color:${s.logoColor}">${m.init}</div><div><div class="tm-name">${m.name}</div><div class="tm-role">${m.role}</div></div></div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="info-box">
+        <div class="info-box-title">Company Details</div>
+        <div class="info-row"><span class="info-row-label">Stage</span><span class="info-row-val">${s.stage}</span></div>
+        <div class="info-row"><span class="info-row-label">Sector</span><span class="info-row-val">${s.sector}</span></div>
+        <div class="info-row"><span class="info-row-label">Founded</span><span class="info-row-val">${s.founded}</span></div>
+        <div class="info-row"><span class="info-row-label">HQ</span><span class="info-row-val">${s.hq}, Hyderabad</span></div>
+        <div class="info-row"><span class="info-row-label">Website</span><span class="info-row-val" style="color:var(--accent)">${s.website}</span></div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-title">Investors</div>
+        <div class="desc-text" style="font-size:13px">${s.investors}</div>
+      </div>
+      <div class="info-box" style="background:rgba(91,138,240,.05);border-color:rgba(91,138,240,.2)">
+        <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Looking for talent?</div>
+        <button class="btn-sm btn-sm-primary" style="width:100%">View Open Roles at ${s.name} →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderJobDetail(j){
+  document.getElementById('job-detail-content').innerHTML=`
+  <div class="detail-hero">
+    <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px">
+      <div style="width:56px;height:56px;border-radius:12px;background:${j.logoBg};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;color:var(--text1);flex-shrink:0">${j.logo}</div>
+      <div>
+        <div class="detail-name" style="font-size:22px;margin-bottom:4px">${j.title}</div>
+        <div style="font-size:15px;color:var(--text2)">${j.company}</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+      <span class="tag tag-blue">📍 ${j.location}</span>
+      ${j.remote?'<span class="tag tag-teal">Remote OK</span>':''}
+      <span class="tag tag-amber">${j.type}</span>
+      ${j.skills.map(s=>`<span class="tag tag-purple">${s}</span>`).join('')}
+    </div>
+    <div class="detail-metrics">
+      <div class="d-metric"><div class="d-metric-val" style="color:var(--teal)">${j.salary}</div><div class="d-metric-label">Compensation</div></div>
+      <div class="d-metric"><div class="d-metric-val">${j.applicants}</div><div class="d-metric-label">Applicants</div></div>
+      <div class="d-metric"><div class="d-metric-val">${j.posted}</div><div class="d-metric-label">Posted</div></div>
+      <div class="d-metric"><div class="d-metric-val">${j.type}</div><div class="d-metric-label">Job type</div></div>
+    </div>
+  </div>
+  <div class="info-grid">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="info-box">
+        <div class="info-box-title">About the role</div>
+        <div class="desc-text">${j.about}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-title">Key responsibilities</div>
+        ${j.responsibilities.map(r=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text2)"><span style="color:var(--accent);flex-shrink:0">▸</span>${r}</div>`).join('')}
+      </div>
+      <div class="info-box">
+        <div class="info-box-title">Requirements</div>
+        ${j.requirements.map(r=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text2)"><span style="color:var(--teal);flex-shrink:0">✓</span>${r}</div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="info-box" style="background:rgba(91,138,240,.05);border-color:rgba(91,138,240,.25);position:sticky;top:80px">
+        <div class="info-box-title" style="border-color:rgba(91,138,240,.2)">Apply now</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:16px">${j.applicants} people have applied. Be among the first!</div>
+        <button class="btn-primary" style="width:100%;margin-bottom:8px">Apply for this role</button>
+        <button class="btn-secondary" style="width:100%;font-size:13px">Save job</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderInvestorDetail(inv){
+  document.getElementById('investor-detail-content').innerHTML=`
+  <div class="detail-hero">
+    <div class="investor-avatar" style="background:${inv.avatarBg};color:${inv.avatarColor};width:64px;height:64px;font-size:24px;border-radius:14px;margin-bottom:16px">${inv.init}</div>
+    <div class="detail-name">${inv.name}</div>
+    <div class="detail-tagline">${inv.firm}</div>
+    <div class="detail-tags"><span class="tag ${inv.type==='VC'?'tag-blue':inv.type==='Government'?'tag-teal':'tag-amber'}">${inv.type}</span><span class="tag tag-purple">${inv.stage}</span></div>
+    <div class="detail-metrics">
+      <div class="d-metric"><div class="d-metric-val">${inv.portfolio}</div><div class="d-metric-label">Portfolio companies</div></div>
+      <div class="d-metric"><div class="d-metric-val" style="color:var(--teal)">${inv.deployed}</div><div class="d-metric-label">Capital deployed</div></div>
+      <div class="d-metric"><div class="d-metric-val" style="font-size:16px">${inv.stage}</div><div class="d-metric-label">Investment stage</div></div>
+      <div class="d-metric"><div class="d-metric-val" style="font-size:15px;color:var(--amber)">${inv.focus.split(',')[0]}</div><div class="d-metric-label">Primary focus</div></div>
+    </div>
+  </div>
+  <div class="info-grid">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="info-box">
+        <div class="info-box-title">About ${inv.name}</div>
+        <div class="desc-text">${inv.about}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-title">Notable Portfolio Companies</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px">${inv.deals.map(d=>`<span class="tag tag-blue" style="font-size:13px;padding:6px 14px">${d}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="info-box">
+        <div class="info-box-title">Investment profile</div>
+        <div class="info-row"><span class="info-row-label">Type</span><span class="info-row-val">${inv.type}</span></div>
+        <div class="info-row"><span class="info-row-label">Stage</span><span class="info-row-val">${inv.stage}</span></div>
+        <div class="info-row"><span class="info-row-label">Focus</span><span class="info-row-val">${inv.focus}</span></div>
+        <div class="info-row"><span class="info-row-label">Portfolio size</span><span class="info-row-val">${inv.portfolio} companies</span></div>
+      </div>
+      <div class="info-box" style="background:rgba(45,212,160,.05);border-color:rgba(45,212,160,.2)">
+        <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Raising funds?</div>
+        <button class="btn-sm btn-sm-primary" style="width:100%;color:var(--teal);background:rgba(45,212,160,.1);border-color:rgba(45,212,160,.25)">Request Introduction →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderEventDetail(ev){
+  document.getElementById('event-detail-content').innerHTML=`
+  <div class="detail-hero">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:${ev.color};color:${ev.accent};font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;margin-bottom:16px">${ev.type.toUpperCase()}</div>
+    <div class="detail-name">${ev.title}</div>
+    <div class="detail-tagline">${ev.desc}</div>
+    <div class="detail-tags">${ev.tags.map(t=>`<span class="tag tag-blue">${t}</span>`).join('')}</div>
+    <div class="detail-metrics">
+      <div class="d-metric"><div class="d-metric-val">${ev.date}</div><div class="d-metric-label">Date</div></div>
+      <div class="d-metric"><div class="d-metric-val">${ev.registrations}</div><div class="d-metric-label">Registered</div></div>
+      <div class="d-metric"><div class="d-metric-val">${ev.attendees}</div><div class="d-metric-label">Capacity</div></div>
+      <div class="d-metric"><div class="d-metric-val" style="color:var(--teal);font-size:16px">${ev.tickets}</div><div class="d-metric-label">Tickets</div></div>
+    </div>
+  </div>
+  <div class="info-grid">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="info-box">
+        <div class="info-box-title">About this event</div>
+        <div class="desc-text">${ev.about}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-title">Speakers & Participants</div>
+        ${ev.speakers.map(sp=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text2)">▸ ${sp}</div>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="info-box">
+        <div class="info-box-title">Event details</div>
+        <div class="info-row"><span class="info-row-label">Date</span><span class="info-row-val">${ev.date}</span></div>
+        <div class="info-row"><span class="info-row-label">Venue</span><span class="info-row-val">${ev.venue}</span></div>
+        <div class="info-row"><span class="info-row-label">Format</span><span class="info-row-val">${ev.type}</span></div>
+        <div class="info-row"><span class="info-row-label">Tickets</span><span class="info-row-val" style="color:var(--teal)">${ev.tickets}</span></div>
+      </div>
+      <div class="info-box" style="background:rgba(91,138,240,.05);border-color:rgba(91,138,240,.25)">
+        <div style="font-size:13px;color:var(--text2);margin-bottom:12px">${ev.registrations} of ${ev.attendees} spots taken</div>
+        <div style="height:6px;background:var(--bg3);border-radius:4px;margin-bottom:16px"><div style="height:100%;width:${Math.round(ev.registrations/ev.attendees*100)}%;background:var(--accent);border-radius:4px"></div></div>
+        <button class="btn-primary" style="width:100%;margin-bottom:8px">Register Now</button>
+        <button class="btn-secondary" style="width:100%;font-size:13px">Share event</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderActivityDetail(a){
+  document.getElementById('activity-detail-content').innerHTML=`
+  <div class="detail-hero">
+    <div style="width:64px;height:64px;border-radius:50%;background:${a.color};display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px">${a.icon}</div>
+    <div class="detail-name" style="font-size:20px">${a.title}</div>
+    <div class="detail-tagline" style="margin-top:8px">${a.sub}</div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <span class="tag tag-blue">${a.type.toUpperCase()}</span>
+      <span class="tag tag-teal">📅 ${a.time}</span>
+    </div>
+  </div>
+  <div class="info-box" style="margin-top:16px">
+    <div class="info-box-title">More about this update</div>
+    <div class="desc-text">This is a live activity update from the Hyderabad startup ecosystem. Stay tuned for more details as the story develops. Track related companies, investors, and events using the navigation above.</div>
+    <div class="hero-btns" style="margin-top:20px">
+      <button class="btn-primary">Follow this story</button>
+      <button class="btn-secondary">Share update</button>
+    </div>
+  </div>`;
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────
+const PAGE_TITLES = {home:'Dashboard',startups:'Startups',jobs:'Jobs',investors:'Investors',events:'Events',activity:'Live Activity','startup-detail':'Startup Details','job-detail':'Job Details','investor-detail':'Investor Details','event-detail':'Event Details','activity-detail':'Activity Details'};
+
+function nav(page, linkEl){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
+  const mainPage = page.replace('-detail','');
+  const mainLink = document.querySelector(`.nav a[data-page="${mainPage}"]`);
+  if(mainLink) mainLink.classList.add('active');
+  if(linkEl) { document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active')); linkEl.classList.add('active'); }
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[page]||'Portal';
+  document.querySelector('.content').scrollTop=0;
+  if(window.innerWidth<=768) toggleMenu(true);
+}
+
+function showStartupDetail(id){
+  renderStartupDetail(STARTUPS[id]);
+  nav('startup-detail');
+}
+function showJobDetail(id){
+  renderJobDetail(JOBS[id]);
+  nav('job-detail');
+}
+function showInvestorDetail(id){
+  renderInvestorDetail(INVESTORS[id]);
+  nav('investor-detail');
+}
+function showEventDetail(id){
+  renderEventDetail(EVENTS[id]);
+  nav('event-detail');
+}
+function showActivityDetail(id){
+  renderActivityDetail(ACTIVITIES[id]);
+  nav('activity-detail');
+}
+
+function setFilter(btn){
+  btn.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function toggleMenu(forceClose){
+  const s=document.getElementById('sidebar');
+  const o=document.getElementById('overlay');
+  const open = !forceClose && !s.classList.contains('open');
+  s.classList.toggle('open',open);
+  o.classList.toggle('show',open);
+}
+</script>
+</body>
+</html>
